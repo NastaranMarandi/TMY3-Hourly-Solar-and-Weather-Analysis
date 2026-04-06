@@ -18,6 +18,7 @@ OUTPUT_DIR = BASE_DIR / "output"
 
 
 def load_data():
+    """Load stations metadata and weather data from CSV files."""
     stations_meta_path = DATA_DIR / STATIONS_META_FILE
     weather_path = DATA_DIR / WEATHER_FILE
 
@@ -39,6 +40,7 @@ def load_data():
 
 
 def explore(stations_meta, weather):
+    """Display summary information about the loaded data."""
     print("=== Stations Meta Data ===")
     print(stations_meta.head(3).to_string())
     print(f"Nulls:\n{stations_meta.isnull().sum()[stations_meta.isnull().sum() > 0]}\n")
@@ -50,6 +52,7 @@ def explore(stations_meta, weather):
 
 
 def clean(stations_meta, weather):
+    """Clean and preprocess stations metadata and weather data."""
     # Stations Meta
     stations_meta["USAF"] = stations_meta["USAF"].str.strip()
     stations_meta["Latitude"] = pd.to_numeric(
@@ -96,6 +99,7 @@ def clean(stations_meta, weather):
 
 
 def calculate(weather):
+    """Calculate weekly aggregated statistics from weather data."""
     weather["week_start"] = weather["datetime"].dt.to_period("W-MON").dt.start_time
 
     weekly = (
@@ -108,6 +112,7 @@ def calculate(weather):
     return weekly
 
 def save(weekly: pd.DataFrame) -> None:
+    """Save processed weather data to CSV and JSON files."""
     # Save as CSV
     weekly.to_csv(OUTPUT_DIR / "weekly_weather.csv", index=False)
     print("Data saved as CSV file in the ouput folder.")
@@ -127,12 +132,13 @@ def save(weekly: pd.DataFrame) -> None:
         })
 
     # Save as JSON
-    with open(OUTPUT_DIR / "weekly_weather.json", "w") as f:
+    with open(OUTPUT_DIR / "weekly_weather.json", "w", encoding="utf-8") as f:
         json.dump(stations, f, indent=2)
     print("Data saved as JSON file in the ouput folder.")
 
 
 def main():
+    """Execute the TMY3 solar and weather data processing pipeline."""
     stations_meta, weather = load_data()
     explore(stations_meta, weather)
     weather = clean(stations_meta, weather)
