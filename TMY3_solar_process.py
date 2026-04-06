@@ -111,7 +111,7 @@ def calculate(weather):
     weekly["timestamp_ms"] = weekly["datetime"].view("int64") // 1000000
     return weekly
 
-def save(weekly: pd.DataFrame) -> None:
+def save(weekly):
     """Save processed weather data to CSV and JSON files."""
     # Save as CSV
     weekly.to_csv(OUTPUT_DIR / "weekly_weather.csv", index=False)
