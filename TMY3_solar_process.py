@@ -13,7 +13,7 @@ STATIONS_META_FILE = "TMY3_StationsMeta.csv"
 
 DATA_DIR = BASE_DIR / "input_data"
 
-# Ensure the output folder exists inside the project
+# Output directory
 OUTPUT_DIR = BASE_DIR / "output"
 
 
